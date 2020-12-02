@@ -8,10 +8,9 @@ class Product {
 }
 
 class UI{
-    constructor(isShowingAlert){
-        this.isShowingAlert = isShowingAlert = false
+    constructor(isShowAlert){
+        this.isShowAlert = isShowAlert
     }
-
     addProduct(product){
         const productList = document.getElementById("product-list");
         const element = document.createElement("div");
@@ -27,11 +26,11 @@ class UI{
        `;
        productList.appendChild(element);
        
-    };
+    }
 
     resetForm(){
         document.getElementById("product-form").reset()
-    };
+    }
 
     deleteProduct(element){
         if(element.name === "delete"){
@@ -39,23 +38,26 @@ class UI{
             this.showMessage("Product Delete Satisfactory", "danger")
         }
         
-    };
-
+    }
     showMessage(message, cssClass){
-        if(this.isShowingAlert!=true){
-            this.isShowingAlert = true;
+        if (!this.isShowAlert) {
+            this.isShowAlert=true
             const div = document.createElement("div");
             div.className = `alert alert-${cssClass}`;
             div.appendChild(document.createTextNode(message));
             //Showing in DOM
             const container = document.querySelector(".container");
             const app = document.querySelector("#App");
-            container.insertBefore(div, app)    
+            if(document.querySelector(".alert")){
+                document.querySelector(".alert").remove()
+            }
+            container.insertBefore(div, app)
             setTimeout(() => {
-                document.querySelector(".alert").remove();
-                this.isShowingAlert = false
+                document.querySelector(".alert").remove()
+                this.isShowAlert=false
             }, 3000);;
-    };
+        }
+
     }
 }
 //DOM Events
@@ -64,7 +66,7 @@ document.getElementById("product-form").addEventListener("submit", function(){
     const price = document.getElementById("price").value;
     const year = document.getElementById("year").value;
     const product = new Product(name, price, year);
-    const ui= new UI();
+    const ui= new UI(false);
 
     if(name==="" || price=== "" || year=== ""){
         return ui.showMessage("Complete Message", "info");
@@ -77,6 +79,6 @@ document.getElementById("product-form").addEventListener("submit", function(){
 });
 
 document.getElementById("product-list").addEventListener('click', function(e){
-    const ui = new UI()
+    const ui = new UI(false)
     ui.deleteProduct(e.target)
 });
